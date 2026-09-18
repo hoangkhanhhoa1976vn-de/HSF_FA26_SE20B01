@@ -29,7 +29,11 @@ public class Project {
     @Column(name = "end_date")
     private LocalDate endDate;
 
-    // TODO 5.1: Dùng Set<> (không dùng List<>) cho quan hệ N-N để tránh trùng lặp
+    /*
+     * TODO 5.3 — Trong Project (inverse side):
+     * Cấu hình @ManyToMany(mappedBy = "projects")
+     */
+    @ManyToMany(mappedBy = "projects")
     private Set<Employee> employees = new HashSet<>();
 
     public Project() {}
