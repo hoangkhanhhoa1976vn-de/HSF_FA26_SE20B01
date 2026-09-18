@@ -34,6 +34,17 @@ public class Employee {
     @Column(name = "active", nullable = false)
     private boolean active = true;
 
+    /*
+     * TODO 5.2 — Trong Employee (owning side):
+     * Cấu hình @ManyToMany với bảng trung gian 'employee_project',
+     * joinColumns trỏ tới khóa ngoại employee_id, inverseJoinColumns trỏ tới project_id.
+     * Dùng Set<> để ngăn ngừa trùng lặp phần tử.
+     *
+     * LƯU Ý CHECKLIST:
+     * KHÔNG dùng cascade = ALL / REMOVE ở quan hệ N-N!
+     * Vì nếu xóa một Employee, ta KHÔNG được phép xóa Project chung
+     * (dự án đó vẫn đang do các nhân viên khác thực hiện).
+     */
     @ManyToMany
     @JoinTable(
         name = "employee_project",
@@ -42,7 +53,8 @@ public class Employee {
     )
     private Set<Project> projects = new HashSet<>();
 
-    public Employee() {}
+    public Employee() {
+    }
 
     public Employee(String fullName, BigDecimal salary, LocalDate hireDate, String email, Gender gender, boolean active) {
         this.fullName = fullName;
@@ -53,25 +65,93 @@ public class Employee {
         this.active = active;
     }
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-    public String getFullName() { return fullName; }
-    public void setFullName(String fullName) { this.fullName = fullName; }
-    public BigDecimal getSalary() { return salary; }
-    public void setSalary(BigDecimal salary) { this.salary = salary; }
-    public LocalDate getHireDate() { return hireDate; }
-    public void setHireDate(LocalDate hireDate) { this.hireDate = hireDate; }
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
-    public Gender getGender() { return gender; }
-    public void setGender(Gender gender) { this.gender = gender; }
-    public boolean isActive() { return active; }
-    public void setActive(boolean active) { this.active = active; }
-    public Set<Project> getProjects() { return projects; }
-    public void setProjects(Set<Project> projects) { this.projects = projects; }
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public BigDecimal getSalary() {
+        return salary;
+    }
+
+    public void setSalary(BigDecimal salary) {
+        this.salary = salary;
+    }
+
+    public LocalDate getHireDate() {
+        return hireDate;
+    }
+
+    public void setHireDate(LocalDate hireDate) {
+        this.hireDate = hireDate;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public Gender getGender() {
+        return gender;
+    }
+
+    public void setGender(Gender gender) {
+        this.gender = gender;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public Set<Project> getProjects() {
+        return projects;
+    }
+
+    public void setProjects(Set<Project> projects) {
+        this.projects = projects;
+    }
 
     /*
-     * TODO 5.4 — Override equals()/hashCode() dựa trên email (Business Key)
+     * TODO 5.5 — Viết helper method assignToProject(Project p) trong Employee
+     * để add vào cả 2 phía: đồng bộ cả employee.getProjects() và p.getEmployees().
+     */
+    public void assignToProject(Project p) {
+        if (p != null) {
+            this.projects.add(p);
+            p.getEmployees().add(this);
+        }
+    }
+
+
+    /*
+     * TODO 5.4 — Override equals()/hashCode() dựa trên email — KHÔNG dùng id:
+     *
+     * GIẢI THÍCH (Mục 9.4 Chapter 1):
+     * 1. Khi một Employee vừa được tạo mới (transient state), id = null. Nếu dùng id để tính hashCode,
+     *    đối tượng được đưa vào một bucket dựa trên null. Sau khi persist xuống DB, database sinh id mới
+     *    (IDENTITY), làm thay đổi hashCode của đối tượng. Khi đó, nếu tìm kiếm trong Set/Map, ta sẽ
+     *    không thể tìm thấy đối tượng nữa (vi phạm tính bất biến của Hash Table).
+     * 2. 'email' là thuộc tính tự nhiên duy nhất (unique business key), không thay đổi trong suốt vòng đời
+     *    của đối tượng nhân viên, đảm bảo rằng 2 instance đại diện cho cùng 1 nhân viên trong đời thực
+     *    sẽ có cùng mã hash và được Set nhận diện chính xác, tránh duplicate.
      */
     @Override
     public boolean equals(Object o) {
@@ -84,5 +164,18 @@ public class Employee {
     @Override
     public int hashCode() {
         return Objects.hash(email);
+    }
+
+    @Override
+    public String toString() {
+        return "Employee{" +
+                "id=" + id +
+                ", fullName='" + fullName + '\'' +
+                ", salary=" + salary +
+                ", hireDate=" + hireDate +
+                ", email='" + email + '\'' +
+                ", gender=" + gender +
+                ", active=" + active +
+                '}';
     }
 }
