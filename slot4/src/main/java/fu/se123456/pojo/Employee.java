@@ -33,7 +33,16 @@ public class Employee {
     @Column(name = "active", nullable = false)
     private boolean active = true;
 
-    // TODO 5.1: Dùng Set<> (không dùng List<>) cho quan hệ N-N để tránh trùng lặp
+    /*
+     * TODO 5.2 — Trong Employee (owning side):
+     * Cấu hình @ManyToMany với bảng trung gian employee_project
+     */
+    @ManyToMany
+    @JoinTable(
+        name = "employee_project",
+        joinColumns = @JoinColumn(name = "employee_id"),
+        inverseJoinColumns = @JoinColumn(name = "project_id")
+    )
     private Set<Project> projects = new HashSet<>();
 
     public Employee() {}
