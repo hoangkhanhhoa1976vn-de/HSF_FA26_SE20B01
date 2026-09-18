@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -33,10 +34,6 @@ public class Employee {
     @Column(name = "active", nullable = false)
     private boolean active = true;
 
-    /*
-     * TODO 5.2 — Trong Employee (owning side):
-     * Cấu hình @ManyToMany với bảng trung gian employee_project
-     */
     @ManyToMany
     @JoinTable(
         name = "employee_project",
@@ -72,4 +69,20 @@ public class Employee {
     public void setActive(boolean active) { this.active = active; }
     public Set<Project> getProjects() { return projects; }
     public void setProjects(Set<Project> projects) { this.projects = projects; }
+
+    /*
+     * TODO 5.4 — Override equals()/hashCode() dựa trên email (Business Key)
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Employee)) return false;
+        Employee employee = (Employee) o;
+        return Objects.equals(email, employee.email);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(email);
+    }
 }
