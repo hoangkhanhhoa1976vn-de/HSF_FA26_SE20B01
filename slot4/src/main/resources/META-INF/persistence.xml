@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="https://jakarta.ee/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence
+                                 https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd"
+             version="3.0">
+    <persistence-unit name="hsf302PU" transaction-type="RESOURCE_LOCAL">
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+        
+        <!-- Dang ky cac Entity ManyToMany -->
+        <class>fu.se123456.pojo.Employee</class>
+        <class>fu.se123456.pojo.Project</class>
+
+        <properties>
+            <!-- Thong tin ket noi Microsoft SQL Server -->
+            <property name="jakarta.persistence.jdbc.driver" value="com.microsoft.sqlserver.jdbc.SQLServerDriver"/>
+            <property name="jakarta.persistence.jdbc.url" value="jdbc:sqlserver://localhost:1433;databaseName=HSF302_ManyToMany;encrypt=false;trustServerCertificate=true"/>
+            <property name="jakarta.persistence.jdbc.user" value="employee_user"/>
+            <property name="jakarta.persistence.jdbc.password" value="Employee@123456"/>
+
+            <!-- Dialect danh cho SQL Server -->
+            <property name="hibernate.dialect" value="org.hibernate.dialect.SQLServerDialect"/>
+            
+            <!-- Tu dong tao/cap nhat cau truc bang theo Entity -->
+            <property name="hibernate.hbm2ddl.auto" value="update"/>
+
+            <!-- Hien thi va format cau lenh SQL de quan sat thuc thi -->
+            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.format_sql" value="true"/>
+            <property name="hibernate.highlight_sql" value="true"/>
+        </properties>
+    </persistence-unit>
+</persistence>
