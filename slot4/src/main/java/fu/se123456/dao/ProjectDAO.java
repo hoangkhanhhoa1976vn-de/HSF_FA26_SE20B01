@@ -89,4 +89,24 @@ public class ProjectDAO {
             em.close();
         }
     }
+
+    /*
+     * TODO 5.8 — Viết JPQL đếm số nhân viên active tham gia mỗi project và tính tổng salary của các nhân viên đó:
+     * SELECT p.projectName, COUNT(e), SUM(e.salary)
+     * FROM Project p JOIN p.employees e
+     * WHERE e.active = true
+     * GROUP BY p.projectName
+     */
+    public List<Object[]> findActiveEmployeeStatsPerProject() {
+        EntityManager em = JPAUtil.getEntityManager();
+        try {
+            String jpql = "SELECT p.projectName, COUNT(e), SUM(e.salary) " +
+                          "FROM Project p JOIN p.employees e " +
+                          "WHERE e.active = true " +
+                          "GROUP BY p.projectName";
+            return em.createQuery(jpql, Object[].class).getResultList();
+        } finally {
+            em.close();
+        }
+    }
 }

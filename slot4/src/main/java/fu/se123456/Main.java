@@ -98,8 +98,20 @@ public class Main {
                 }
             }
 
+            // ----------------------------------------------------------------------------------
+            // TODO 5.8: DEMO JPQL ĐẾM SỐ NHÂN VIÊN ACTIVE VÀ TỔNG SALARY THEO TỪNG PROJECT
+            // ----------------------------------------------------------------------------------
+            System.out.println("\n>>> [TODO 5.8] DEMO JPQL: DEM SO NHAN VIEN ACTIVE VA TONG LUONG THEO PROJECT:");
+            List<Object[]> projectStats = projectDAO.findActiveEmployeeStatsPerProject();
+            for (Object[] row : projectStats) {
+                String projectName = (String) row[0];
+                Long activeCount = (Long) row[1];
+                BigDecimal totalSalary = (BigDecimal) row[2];
+                System.out.println(" - Du an [" + projectName + "]: So NV active = " + activeCount + ", Tong luong = " + totalSalary);
+            }
+
             System.out.println("\n==========================================================");
-            System.out.println(" HOAN THANH XONG TODO 5.1 DEN TODO 5.7!                   ");
+            System.out.println(" HOAN THANH XONG TODO 5.1 DEN TODO 5.8!                   ");
             System.out.println("==========================================================");
 
         } catch (Exception ex) {
