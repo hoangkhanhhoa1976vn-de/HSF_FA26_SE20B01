@@ -140,4 +140,18 @@ public class EmployeeDAO {
             em.close();
         }
     }
+
+    /*
+     * TODO 5.10 — Viết JPQL tìm các Employee (chỉ lấy active = true) đang tham gia nhiều hơn 1 project cùng lúc:
+     * SELECT e FROM Employee e WHERE e.active = true AND SIZE(e.projects) > 1
+     */
+    public List<Employee> findActiveEmployeesWithMultipleProjects() {
+        EntityManager em = JPAUtil.getEntityManager();
+        try {
+            String jpql = "SELECT e FROM Employee e WHERE e.active = true AND SIZE(e.projects) > 1";
+            return em.createQuery(jpql, Employee.class).getResultList();
+        } finally {
+            em.close();
+        }
+    }
 }

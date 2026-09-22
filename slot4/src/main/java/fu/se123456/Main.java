@@ -137,8 +137,22 @@ public class Main {
                 System.out.println("=> XAC NHAN: Khong anh huong Employee hoac Project goc (van nguyen ven trong database).");
             }
 
+            // ----------------------------------------------------------------------------------
+            // TODO 5.10: DEMO JPQL TÌM NHÂN VIÊN ACTIVE THAM GIA NHIỀU HƠN 1 PROJECT CÙNG LÚC
+            // ----------------------------------------------------------------------------------
+            System.out.println("\n>>> [TODO 5.10] DEMO JPQL TIM NHAN VIEN (ACTIVE = TRUE) THAM GIA > 1 PROJECT:");
+            System.out.println(" - Phan cong NV2 (" + emp2.getFullName() + ") tham gia them vao Project A (" + projA.getProjectName() + ")...");
+            employeeDAO.assignEmployeeToProject(emp2.getId(), projA.getId());
+
+            List<Employee> multiProjectEmps = employeeDAO.findActiveEmployeesWithMultipleProjects();
+            System.out.println(" - Ket qua truy van (SELECT e FROM Employee e WHERE e.active = true AND SIZE(e.projects) > 1):");
+            for (Employee e : multiProjectEmps) {
+                Employee loaded = employeeDAO.findByIdWithProjects(e.getId());
+                System.out.println("   + [" + loaded.getFullName() + " | Email: " + loaded.getEmail() + "] - Dang tham gia " + loaded.getProjects().size() + " du an (Active: " + loaded.isActive() + ")");
+            }
+
             System.out.println("\n==========================================================");
-            System.out.println(" HOAN THANH XONG TODO 5.1 DEN TODO 5.9!                   ");
+            System.out.println(" HOAN THANH XONG TODO 5.1 DEN TODO 5.10!                  ");
             System.out.println("==========================================================");
 
         } catch (Exception ex) {
