@@ -151,8 +151,42 @@ public class Main {
                 System.out.println("   + [" + loaded.getFullName() + " | Email: " + loaded.getEmail() + "] - Dang tham gia " + loaded.getProjects().size() + " du an (Active: " + loaded.isActive() + ")");
             }
 
+            // ----------------------------------------------------------------------------------
+            // TODO 5.11: DEMO DEACTIVATE EMPLOYEE (VÔ HIỆU HÓA NHÂN VIÊN)
+            // ----------------------------------------------------------------------------------
+            System.out.println("\n>>> [TODO 5.11] DEMO VO HIEU HOA NHAN VIEN (deactivateEmployee):");
+            jakarta.persistence.EntityManager emCheckDeactivate = JPAUtil.getEntityManager();
+            long joinCountBeforeDeact = ((Number) emCheckDeactivate.createNativeQuery("SELECT COUNT(*) FROM employee_project").getSingleResult()).longValue();
+            emCheckDeactivate.close();
+
+            System.out.println(" - Thuc hien deactivate NV2 (" + emp2.getFullName() + ") - ID: " + emp2.getId() + " (active = false)...");
+            employeeDAO.deactivateEmployee(emp2.getId());
+
+            Employee deactivatedEmp = employeeDAO.findById(emp2.getId());
+            jakarta.persistence.EntityManager emCheckDeactivateAfter = JPAUtil.getEntityManager();
+            long joinCountAfterDeact = ((Number) emCheckDeactivateAfter.createNativeQuery("SELECT COUNT(*) FROM employee_project").getSingleResult()).longValue();
+            emCheckDeactivateAfter.close();
+
+            System.out.println(" - Trang thai NV2 sau khi deactivate: active = " + deactivatedEmp.isActive());
+            System.out.println(" - So dong trong bang employee_project truoc va sau: " + joinCountBeforeDeact + " -> " + joinCountAfterDeact);
+            if (!deactivatedEmp.isActive() && joinCountBeforeDeact == joinCountAfterDeact) {
+                System.out.println("=> XAC NHAN: deactivateEmployee() chi update active = false, KHONG xoa dong trong employee_project.");
+                System.out.println("=> XAC NHAN: Lich su tham gia du an cua nhan vien van duoc bao toan nguyen ven.");
+            }
+
+            // Chạy lại query TODO 5.10 để xác nhận nhân viên inactive không còn nằm trong danh sách
+            List<Employee> activeAfterDeact = employeeDAO.findActiveEmployeesWithMultipleProjects();
+            System.out.println(" - Chay lai query TODO 5.10 sau khi deactivate NV2: Co " + activeAfterDeact.size() + " nhan vien active tham gia > 1 du an.");
+
+            // Chạy lại query TODO 5.8 để xác nhận tổng kết quả thống kê tự động trừ nhân viên inactive
+            System.out.println("\n - Chay lai query TODO 5.8 thong ke so NV active & tong luong sau khi NV2 inactive:");
+            List<Object[]> updatedStats = projectDAO.findActiveEmployeeStatsPerProject();
+            for (Object[] row : updatedStats) {
+                System.out.println("   + Du an [" + row[0] + "]: So NV active = " + row[1] + ", Tong luong = " + row[2]);
+            }
+
             System.out.println("\n==========================================================");
-            System.out.println(" HOAN THANH XONG TODO 5.1 DEN TODO 5.10!                  ");
+            System.out.println(" HOAN THANH XUAT SAC TOAN BO TODO 5.1 DEN TODO 5.11!      ");
             System.out.println("==========================================================");
 
         } catch (Exception ex) {

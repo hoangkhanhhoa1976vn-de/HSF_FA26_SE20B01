@@ -154,4 +154,49 @@ public class EmployeeDAO {
             em.close();
         }
     }
+
+    /*
+     * TODO 5.11 — Viết method deactivateEmployee(Long employeeId) (set active = false)
+     *
+     * GIẢI THÍCH TRONG COMMENT (Theo yêu cầu Checklist):
+     *
+     * 1. Câu hỏi: Nhân viên nghỉ việc có nên tự động bị gỡ khỏi tất cả project hay không?
+     *    -> TRẢ LỜI: KHÔNG NÊN tự động gỡ nhân viên khỏi các project (không xóa dữ liệu trong bảng trung gian employee_project).
+     *
+     * 2. Lý do cần bảo toàn quan hệ trong employee_project:
+     *    - Tính toàn vẹn lịch sử (Audit Trail & Historical Integrity): Dữ liệu nhân viên đã từng tham gia
+     *      dự án nào, thực hiện công việc gì là tài sản thông tin lịch sử của công ty (phục vụ nghiệm thu,
+     *      báo cáo tài chính, kiểm toán, đánh giá đóng góp nhân sự). Nếu gỡ nhân viên ra khỏi dự án khi họ nghỉ việc,
+     *      toàn bộ dấu vết lịch sử tham gia dự án sẽ biến mất hoàn toàn, gây sai lệch báo cáo quá khứ.
+     *
+     * 3. Vì sao quan hệ N-N thường KHÔNG dùng cascade = REMOVE / cascade = ALL:
+     *    - Employee và Project là 2 thực thể độc lập có vòng đời riêng biệt.
+     *    - Nếu cấu hình cascade REMOVE trên quan hệ N-N, khi xóa một Employee, Hibernate sẽ xóa luôn các
+     *      Project mà nhân viên đó tham gia (dù dự án vẫn đang thực hiện bởi các nhân viên khác). Tương tự,
+     *      khi xóa 1 Project, hệ thống tuyệt đối không được phép xóa các Employee của doanh nghiệp.
+     *    - Do đó, quan hệ N-N luôn tránh cascade REMOVE để không xóa nhầm thực thể phía bên kia.
+     *
+     * 4. Cách xử lý phù hợp (Soft Delete):
+     *    - Chỉ cập nhật cờ trạng thái 'active = false' của Employee trong bảng employees.
+     *    - Giữ nguyên toàn bộ các dòng liên kết trong bảng trung gian 'employee_project' để tra cứu lịch sử.
+     *    - Trong các câu truy vấn thống kê nghiệp vụ hiện tại (như TODO 5.8 và TODO 5.10), ta luôn sử dụng
+     *      điều kiện 'WHERE e.active = true' để lọc ra những nhân viên đang thực tế hoạt động.
+     */
+    public void deactivateEmployee(Long employeeId) {
+        EntityManager em = JPAUtil.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+            Employee employee = em.find(Employee.class, employeeId);
+            if (employee != null) {
+                employee.setActive(false);
+            }
+            tx.commit();
+        } catch (Exception e) {
+            if (tx.isActive()) tx.rollback();
+            throw e;
+        } finally {
+            em.close();
+        }
+    }
 }
