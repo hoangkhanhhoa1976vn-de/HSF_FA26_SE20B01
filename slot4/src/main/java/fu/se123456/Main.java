@@ -110,8 +110,35 @@ public class Main {
                 System.out.println(" - Du an [" + projectName + "]: So NV active = " + activeCount + ", Tong luong = " + totalSalary);
             }
 
+            // ----------------------------------------------------------------------------------
+            // TODO 5.9: DEMO UNASSIGN EMPLOYEE FROM PROJECT (GỠ KHỎI DỰ ÁN)
+            // ----------------------------------------------------------------------------------
+            System.out.println("\n>>> [TODO 5.9] DEMO GO 1 NHAN VIEN KHOI 1 PROJECT (unassignFromProject):");
+            jakarta.persistence.EntityManager emCheck = JPAUtil.getEntityManager();
+            long countJoinBefore = ((Number) emCheck.createNativeQuery("SELECT COUNT(*) FROM employee_project").getSingleResult()).longValue();
+            long countEmpBefore = ((Number) emCheck.createNativeQuery("SELECT COUNT(*) FROM employees").getSingleResult()).longValue();
+            long countProjBefore = ((Number) emCheck.createNativeQuery("SELECT COUNT(*) FROM projects").getSingleResult()).longValue();
+            emCheck.close();
+
+            System.out.println(" - Truoc khi go: Bang employee_project = " + countJoinBefore + " dong, Employees = " + countEmpBefore + ", Projects = " + countProjBefore);
+            System.out.println(" - Tien hanh go NV1 (" + emp1.getFullName() + ") khoi Project B (" + projB.getProjectName() + ")...");
+
+            employeeDAO.unassignEmployeeFromProject(emp1.getId(), projB.getId());
+
+            jakarta.persistence.EntityManager emCheckAfter = JPAUtil.getEntityManager();
+            long countJoinAfter = ((Number) emCheckAfter.createNativeQuery("SELECT COUNT(*) FROM employee_project").getSingleResult()).longValue();
+            long countEmpAfter = ((Number) emCheckAfter.createNativeQuery("SELECT COUNT(*) FROM employees").getSingleResult()).longValue();
+            long countProjAfter = ((Number) emCheckAfter.createNativeQuery("SELECT COUNT(*) FROM projects").getSingleResult()).longValue();
+            emCheckAfter.close();
+
+            System.out.println(" - Sau khi go: Bang employee_project = " + countJoinAfter + " dong, Employees = " + countEmpAfter + ", Projects = " + countProjAfter);
+            if (countJoinBefore - countJoinAfter == 1 && countEmpBefore == countEmpAfter && countProjBefore == countProjAfter) {
+                System.out.println("=> XAC NHAN: Bang employee_project mat dung 1 dong (" + countJoinBefore + " -> " + countJoinAfter + ").");
+                System.out.println("=> XAC NHAN: Khong anh huong Employee hoac Project goc (van nguyen ven trong database).");
+            }
+
             System.out.println("\n==========================================================");
-            System.out.println(" HOAN THANH XONG TODO 5.1 DEN TODO 5.8!                   ");
+            System.out.println(" HOAN THANH XONG TODO 5.1 DEN TODO 5.9!                   ");
             System.out.println("==========================================================");
 
         } catch (Exception ex) {

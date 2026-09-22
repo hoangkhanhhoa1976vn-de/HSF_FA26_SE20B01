@@ -102,6 +102,31 @@ public class EmployeeDAO {
         }
     }
 
+    /*
+     * TODO 5.9 — Viết method unassignEmployeeFromProject(Long employeeId, Long projectId):
+     * find cả 2 entity trong 1 transaction rồi gọi unassignFromProject().
+     */
+    public void unassignEmployeeFromProject(Long employeeId, Long projectId) {
+        EntityManager em = JPAUtil.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+            Employee employee = em.find(Employee.class, employeeId);
+            Project project = em.find(Project.class, projectId);
+
+            if (employee != null && project != null) {
+                // Gọi helper method để gỡ đồng bộ 2 chiều trong cùng transaction
+                employee.unassignFromProject(project);
+            }
+            tx.commit();
+        } catch (Exception e) {
+            if (tx.isActive()) tx.rollback();
+            throw e;
+        } finally {
+            em.close();
+        }
+    }
+
     // Helper nạp Employee kèm Projects tránh LazyInitializationException ngoài session
     public Employee findByIdWithProjects(Long id) {
         EntityManager em = JPAUtil.getEntityManager();

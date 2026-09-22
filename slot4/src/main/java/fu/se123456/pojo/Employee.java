@@ -140,6 +140,17 @@ public class Employee {
         }
     }
 
+    /*
+     * TODO 5.9 — Viết helper method unassignFromProject(Project p) (gỡ khỏi dự án):
+     * Đồng bộ cả 2 phía: xóa Project khỏi employee.getProjects() và xóa Employee khỏi p.getEmployees().
+     */
+    public void unassignFromProject(Project p) {
+        if (p != null) {
+            this.projects.remove(p);
+            p.getEmployees().remove(this);
+        }
+    }
+
 
     /*
      * TODO 5.4 — Override equals()/hashCode() dựa trên email — KHÔNG dùng id:
