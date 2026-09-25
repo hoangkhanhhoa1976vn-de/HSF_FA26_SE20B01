@@ -26,7 +26,7 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        if (studentRepository.count() > 0) return;          // dự phòng khi đổi ddl-auto=update
+        if (studentRepository.count() > 0) return;
 
         Department se = new Department("SE", "Software Engineering");
         Department ai = new Department("AI", "Artificial Intelligence");

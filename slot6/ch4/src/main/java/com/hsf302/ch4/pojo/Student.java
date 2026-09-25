@@ -25,7 +25,7 @@ public class Student {
     private String fullName;
 
     @Column(unique = true, length = 100)
-    private String email;                         // cho phép null
+    private String email;
 
     @Enumerated(EnumType.STRING)
     @Column(length = 10)
@@ -37,7 +37,6 @@ public class Student {
 
     private boolean active;
 
-    // Owning side: bảng students có cột department_id (FK -> departments.id)
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "department_id", nullable = false)
     private Department department;
@@ -118,6 +117,5 @@ public class Student {
     public String toString() {
         return String.format("%s | %-15s | %-20s | %.1f | %s",
                 studentCode, fullName, email, gpa, active ? "active" : "inactive");
-        // KHÔNG in department -> tránh LazyInitializationException
     }
 }

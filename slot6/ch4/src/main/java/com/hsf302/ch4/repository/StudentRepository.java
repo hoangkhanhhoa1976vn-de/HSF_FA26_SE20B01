@@ -18,57 +18,56 @@ import java.util.Optional;
 
 public interface StudentRepository extends JpaRepository<Student, Long>,
                                            JpaSpecificationExecutor<Student> {
-    Optional<Student> findByStudentCode(String code);                           // TODO 8, 20
-    boolean existsByEmail(String email);                                        // TODO 8
-    long countByActiveTrue();                                                   // TODO 8, 21
+    Optional<Student> findByStudentCode(String code);
+    boolean existsByEmail(String email);
+    long countByActiveTrue();
 
-    List<Student> findByFullNameContainingIgnoreCase(String kw);                // TODO 9
-    List<Student> findByEmailEndingWith(String suffix);                         // TODO 9
-    List<Student> findByEmailIsNull();                                          // TODO 9
+    List<Student> findByFullNameContainingIgnoreCase(String kw);
+    List<Student> findByEmailEndingWith(String suffix);
+    List<Student> findByEmailIsNull();
 
-    List<Student> findByGpaBetweenOrderByGpaDesc(double min, double max);       // TODO 10
-    List<Student> findByGenderAndActiveTrue(Gender gender);                     // TODO 10
-    List<Student> findByDobAfter(LocalDate date);                               // TODO 10
+    List<Student> findByGpaBetweenOrderByGpaDesc(double min, double max);
+    List<Student> findByGenderAndActiveTrue(Gender gender);
+    List<Student> findByDobAfter(LocalDate date);
 
-    List<Student> findByDepartment_CodeOrderByFullNameAsc(String code);         // TODO 11
-    long countByDepartment_Code(String code);                                   // TODO 11, 22
-    List<Student> findTop3ByOrderByGpaDesc();                                   // TODO 11
+    List<Student> findByDepartment_CodeOrderByFullNameAsc(String code);
+    long countByDepartment_Code(String code);
+    List<Student> findTop3ByOrderByGpaDesc();
 
-    // ===== Part D - Custom query with @Query =====
     @Query("SELECT s FROM Student s WHERE s.department.code = :code AND s.gpa >= :minGpa ORDER BY s.gpa DESC")
-    List<Student> findGoodStudentsInDepartment(@Param("code") String code, @Param("minGpa") double minGpa); // TODO 12
+    List<Student> findGoodStudentsInDepartment(@Param("code") String code, @Param("minGpa") double minGpa);
 
     @Query("SELECT s FROM Student s WHERE " +
            "LOWER(s.fullName) LIKE LOWER(CONCAT('%', :kw, '%')) OR " +
            "(s.email IS NOT NULL AND LOWER(s.email) LIKE LOWER(CONCAT('%', :kw, '%'))) " +
            "ORDER BY s.fullName ASC")
-    List<Student> searchByKeyword(@Param("kw") String keyword);                 // TODO 13
+    List<Student> searchByKeyword(@Param("kw") String keyword);
 
     @Query("SELECT s FROM Student s WHERE s.gpa > (SELECT AVG(s2.gpa) FROM Student s2) ORDER BY s.gpa DESC")
-    List<Student> findAboveAverageGpa();                                        // TODO 15
+    List<Student> findAboveAverageGpa();
 
     @Query(value = "SELECT TOP (:n) s.* FROM students s " +
                    "JOIN departments d ON d.id = s.department_id " +
                    "WHERE d.code = :code ORDER BY s.gpa DESC",
            nativeQuery = true)
-    List<Student> findTopNByDepartmentNative(@Param("code") String code, @Param("n") int n); // TODO 17
+    List<Student> findTopNByDepartmentNative(@Param("code") String code, @Param("n") int n);
 
     @Query("SELECT s.studentCode AS studentCode, s.fullName AS fullName, s.gpa AS gpa, " +
            "d.name AS departmentName " +
            "FROM Student s JOIN s.department d " +
            "WHERE s.active = true ORDER BY s.fullName ASC")
-    List<StudentSummary> findActiveSummaries();                                  // TODO 18
+    List<StudentSummary> findActiveSummaries();
 
     @Query("SELECT s FROM Student s WHERE s.department.code = :code AND s.active = true")
-    Page<Student> findActiveByDepartment(@Param("code") String code, Pageable pageable); // TODO 19
+    Page<Student> findActiveByDepartment(@Param("code") String code, Pageable pageable);
 
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query("UPDATE Student s SET s.active = false WHERE s.gpa < :threshold AND s.active = true")
-    int deactivateLowGpa(@Param("threshold") double threshold);                 // TODO 21
+    int deactivateLowGpa(@Param("threshold") double threshold);
 
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query("UPDATE Student s SET s.department = :to WHERE s.department = :from")
-    int transferStudents(@Param("from") Department from, @Param("to") Department to); // TODO 22
+    int transferStudents(@Param("from") Department from, @Param("to") Department to);
 
-    long deleteByActiveFalse();                                                 // TODO 23
+    long deleteByActiveFalse();
 }

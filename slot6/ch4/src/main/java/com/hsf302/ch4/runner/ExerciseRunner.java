@@ -20,7 +20,6 @@ import java.util.Collection;
 @RequiredArgsConstructor
 public class ExerciseRunner implements CommandLineRunner {
 
-    // Runner CHỈ phụ thuộc vào Service (interface), KHÔNG inject Repository
     private final DepartmentService departmentService;
     private final StudentService studentService;
 
@@ -29,7 +28,7 @@ public class ExerciseRunner implements CommandLineRunner {
         partB();
         partC();
         partD();
-        bonus();      // chạy trên dữ liệu gốc -> trước Part E
+        bonus();
         partE();
     }
 
@@ -137,19 +136,17 @@ public class ExerciseRunner implements CommandLineRunner {
     private void todo16() {
         title("TODO 16: LazyInitializationException & JOIN FETCH");
 
-        // 16a: Tái hiện & bắt LazyInitializationException
         System.out.println("-- 16a. Truy cập students ngoài transaction:");
         try {
             Department d = departmentService.findByCode("AI").orElseThrow();
             System.out.println("   Department: " + d);
-            int size = d.getStudents().size(); // ngoài session -> ném exception
+            int size = d.getStudents().size();
             System.out.println("   Students size: " + size);
         } catch (LazyInitializationException e) {
             System.out.println("   [BẮT ĐƯỢC EXCEPTION MONG ĐỢI]: " + e.getClass().getSimpleName()
                     + " - " + e.getMessage());
         }
 
-        // 16b: Sửa bằng JOIN FETCH
         System.out.println("-- 16b. Sửa bằng JOIN FETCH (1 câu SQL):");
         Department d = departmentService.getWithStudents("AI");
         System.out.println("   Department: " + d);
@@ -213,7 +210,6 @@ public class ExerciseRunner implements CommandLineRunner {
         printList("Final statistics", departmentService.getStatistics());
     }
 
-    // ===== helpers =====
     private void title(String t) {
         System.out.println("\n===== " + t + " =====");
     }

@@ -25,7 +25,6 @@ public class Department {
     @Column(nullable = false, length = 100)
     private String name;
 
-    // Inverse side: "department" là TÊN FIELD bên Student
     @OneToMany(mappedBy = "department")
     private List<Student> students = new ArrayList<>();
 
@@ -34,7 +33,6 @@ public class Department {
         this.name = name;
     }
 
-    // Helper đồng bộ 2 chiều
     public void addStudent(Student s) {
         students.add(s);
         s.setDepartment(this);
@@ -74,6 +72,6 @@ public class Department {
 
     @Override
     public String toString() {
-        return code + " - " + name;       // KHÔNG in students (lazy + vòng lặp)
+        return code + " - " + name;
     }
 }

@@ -1,8 +1,3 @@
--- =====================================================================
--- HSF302 - Chapter 4, Exercise 1: Quản lý Sinh viên - Khoa (One-To-Many)
--- Database: SQL Server
--- =====================================================================
-
 IF NOT EXISTS (SELECT name FROM sys.databases WHERE name = N'HSF302_CH4')
 BEGIN
     CREATE DATABASE HSF302_CH4;
@@ -12,12 +7,10 @@ GO
 USE HSF302_CH4;
 GO
 
--- 1. Xoá bảng cũ (nếu có) theo đúng thứ tự ràng buộc khoá ngoại
 IF OBJECT_ID('dbo.students', 'U') IS NOT NULL DROP TABLE dbo.students;
 IF OBJECT_ID('dbo.departments', 'U') IS NOT NULL DROP TABLE dbo.departments;
 GO
 
--- 2. Tạo bảng departments (phía One - Inverse side)
 CREATE TABLE dbo.departments (
     id BIGINT IDENTITY(1,1) NOT NULL,
     code VARCHAR(10) NOT NULL,
@@ -27,7 +20,6 @@ CREATE TABLE dbo.departments (
 );
 GO
 
--- 3. Tạo bảng students (phía Many - Owning side)
 CREATE TABLE dbo.students (
     id BIGINT IDENTITY(1,1) NOT NULL,
     student_code VARCHAR(10) NOT NULL,
@@ -46,7 +38,6 @@ CREATE TABLE dbo.students (
 );
 GO
 
--- 4. Seed dữ liệu ban đầu (Tương ứng DataInitializer @Order(1))
 SET IDENTITY_INSERT dbo.departments ON;
 INSERT INTO dbo.departments (id, code, name) VALUES
 (1, 'SE', N'Software Engineering'),
@@ -71,7 +62,6 @@ INSERT INTO dbo.students (id, student_code, full_name, email, gender, dob, gpa, 
 SET IDENTITY_INSERT dbo.students OFF;
 GO
 
--- 5. Các câu query kiểm tra dữ liệu
 SELECT * FROM dbo.departments;
 SELECT * FROM dbo.students;
 GO
