@@ -1,10 +1,12 @@
 package com.hsf302.ch4.runner;
 
+import com.hsf302.ch4.pojo.Student;
 import com.hsf302.ch4.service.DepartmentService;
 import com.hsf302.ch4.service.StudentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
@@ -29,6 +31,7 @@ public class ExerciseRunner implements CommandLineRunner {
 
     private void partB() {
         todo6();
+        todo7();
     }
     private void partC() {}
     private void partD() {}
@@ -42,6 +45,16 @@ public class ExerciseRunner implements CommandLineRunner {
         System.out.println("Student id=1 : " + studentService.findById(1L).map(Object::toString).orElse("Not found"));
         System.out.println("Student id=99: " + studentService.findById(99L).map(Object::toString).orElse("Not found"));
         System.out.println("Department id=4 exists: " + departmentService.existsById(4L));
+    }
+
+    private void todo7() {
+        title("TODO 7: findAll(Sort) & findAll(Pageable)");
+        printList("All students sorted by GPA desc", studentService.findAllOrderByGpaDesc());
+
+        Page<Student> page = studentService.findPage(1, 3, "fullName");
+        printList("Page 1 (size=3, sort=fullName asc)", page.getContent());
+        System.out.printf("   [totalElements=%d, totalPages=%d, hasNext=%b]\n",
+                page.getTotalElements(), page.getTotalPages(), page.hasNext());
     }
 
     // ===== helpers =====
