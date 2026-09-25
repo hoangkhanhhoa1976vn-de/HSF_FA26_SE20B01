@@ -44,6 +44,7 @@ public class ExerciseRunner implements CommandLineRunner {
     private void partD() {
         todo12();
         todo13();
+        todo14();
     }
     private void bonus() {}
     private void partE() {}
@@ -107,6 +108,11 @@ public class ExerciseRunner implements CommandLineRunner {
         title("TODO 13: JPQL LIKE + CONCAT + LOWER");
         printList("Keyword 'hoa'", studentService.searchByKeyword("hoa"));
         printList("Keyword 'gmail'", studentService.searchByKeyword("gmail"));
+    }
+
+    private void todo14() {
+        title("TODO 14: Department statistics (DTO constructor expression)");
+        printList("Department statistics", departmentService.getStatistics());
     }
 
     // ===== helpers =====
