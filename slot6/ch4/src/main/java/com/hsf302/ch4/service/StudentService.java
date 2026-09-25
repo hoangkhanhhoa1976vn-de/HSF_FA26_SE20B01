@@ -10,4 +10,7 @@ public interface StudentService {
     Optional<Student> findById(Long id);                                             // TODO 6
     List<Student> findAllOrderByGpaDesc();                                           // TODO 7
     Page<Student> findPage(int pageIndex, int size, String sortField);               // TODO 7
+    Optional<Student> findByStudentCode(String studentCode);                         // TODO 8
+    boolean isEmailExisted(String email);                                            // TODO 8
+    long countActive();                                                              // TODO 8, 21
 }

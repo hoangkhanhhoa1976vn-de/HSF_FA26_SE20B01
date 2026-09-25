@@ -33,7 +33,9 @@ public class ExerciseRunner implements CommandLineRunner {
         todo6();
         todo7();
     }
-    private void partC() {}
+    private void partC() {
+        todo8();
+    }
     private void partD() {}
     private void bonus() {}
     private void partE() {}
@@ -55,6 +57,15 @@ public class ExerciseRunner implements CommandLineRunner {
         printList("Page 1 (size=3, sort=fullName asc)", page.getContent());
         System.out.printf("   [totalElements=%d, totalPages=%d, hasNext=%b]\n",
                 page.getTotalElements(), page.getTotalPages(), page.hasNext());
+    }
+
+    private void todo8() {
+        title("TODO 8: findByStudentCode, existsByEmail, countByActiveTrue");
+        System.out.println("AI002: " + studentService.findByStudentCode("AI002").map(Object::toString).orElse("Not found"));
+        System.out.println("XX999: " + studentService.findByStudentCode("XX999").map(Object::toString).orElse("Not found"));
+        System.out.println("Email 'binh.tt@fpt.edu.vn' exists: " + studentService.isEmailExisted("binh.tt@fpt.edu.vn"));
+        System.out.println("Email 'nonexistent@fpt.edu.vn' exists: " + studentService.isEmailExisted("nonexistent@fpt.edu.vn"));
+        System.out.println("Active students: " + studentService.countActive());
     }
 
     // ===== helpers =====
