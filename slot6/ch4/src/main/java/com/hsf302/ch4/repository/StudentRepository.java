@@ -32,4 +32,10 @@ public interface StudentRepository extends JpaRepository<Student, Long>,
     // ===== Part D - Custom query with @Query =====
     @Query("SELECT s FROM Student s WHERE s.department.code = :code AND s.gpa >= :minGpa ORDER BY s.gpa DESC")
     List<Student> findGoodStudentsInDepartment(@Param("code") String code, @Param("minGpa") double minGpa); // TODO 12
+
+    @Query("SELECT s FROM Student s WHERE " +
+           "LOWER(s.fullName) LIKE LOWER(CONCAT('%', :kw, '%')) OR " +
+           "(s.email IS NOT NULL AND LOWER(s.email) LIKE LOWER(CONCAT('%', :kw, '%'))) " +
+           "ORDER BY s.fullName ASC")
+    List<Student> searchByKeyword(@Param("kw") String keyword);                 // TODO 13
 }

@@ -43,6 +43,7 @@ public class ExerciseRunner implements CommandLineRunner {
     }
     private void partD() {
         todo12();
+        todo13();
     }
     private void bonus() {}
     private void partE() {}
@@ -100,6 +101,12 @@ public class ExerciseRunner implements CommandLineRunner {
     private void todo12() {
         title("TODO 12: JPQL named parameter");
         printList("Good students in SE (GPA >= 3.0)", studentService.findGoodStudents("SE", 3.0));
+    }
+
+    private void todo13() {
+        title("TODO 13: JPQL LIKE + CONCAT + LOWER");
+        printList("Keyword 'hoa'", studentService.searchByKeyword("hoa"));
+        printList("Keyword 'gmail'", studentService.searchByKeyword("gmail"));
     }
 
     // ===== helpers =====
