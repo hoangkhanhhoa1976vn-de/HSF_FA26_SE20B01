@@ -27,11 +27,22 @@ public class ExerciseRunner implements CommandLineRunner {
         partE();
     }
 
-    private void partB() {}
+    private void partB() {
+        todo6();
+    }
     private void partC() {}
     private void partD() {}
     private void bonus() {}
     private void partE() {}
+
+    private void todo6() {
+        title("TODO 6: count(), findById(), existsById()");
+        System.out.println("Departments: " + departmentService.count());
+        System.out.println("Students   : " + studentService.count());
+        System.out.println("Student id=1 : " + studentService.findById(1L).map(Object::toString).orElse("Not found"));
+        System.out.println("Student id=99: " + studentService.findById(99L).map(Object::toString).orElse("Not found"));
+        System.out.println("Department id=4 exists: " + departmentService.existsById(4L));
+    }
 
     // ===== helpers =====
     private void title(String t) {

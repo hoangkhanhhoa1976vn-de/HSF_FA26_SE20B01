@@ -11,4 +11,14 @@ import org.springframework.transaction.annotation.Transactional;
 public class DepartmentServiceImpl implements DepartmentService {
 
     private final DepartmentRepository departmentRepository;
+
+    @Override
+    public long count() {
+        return departmentRepository.count();
+    }
+
+    @Override
+    public boolean existsById(Long id) {
+        return departmentRepository.existsById(id);
+    }
 }
