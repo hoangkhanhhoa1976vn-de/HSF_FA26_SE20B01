@@ -1,12 +1,13 @@
 package com.hsf302.ch4.repository;
 
+import com.hsf302.ch4.dto.StudentSummary;
+import com.hsf302.ch4.pojo.Gender;
 import com.hsf302.ch4.pojo.Student;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.hsf302.ch4.pojo.Gender;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -47,4 +48,10 @@ public interface StudentRepository extends JpaRepository<Student, Long>,
                    "WHERE d.code = :code ORDER BY s.gpa DESC",
            nativeQuery = true)
     List<Student> findTopNByDepartmentNative(@Param("code") String code, @Param("n") int n); // TODO 17
+
+    @Query("SELECT s.studentCode AS studentCode, s.fullName AS fullName, s.gpa AS gpa, " +
+           "d.name AS departmentName " +
+           "FROM Student s JOIN s.department d " +
+           "WHERE s.active = true ORDER BY s.fullName ASC")
+    List<StudentSummary> findActiveSummaries();                                  // TODO 18
 }

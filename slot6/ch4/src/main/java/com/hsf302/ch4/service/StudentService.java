@@ -1,5 +1,6 @@
 package com.hsf302.ch4.service;
 
+import com.hsf302.ch4.dto.StudentSummary;
 import com.hsf302.ch4.pojo.Gender;
 import com.hsf302.ch4.pojo.Student;
 import org.springframework.data.domain.Page;
@@ -28,4 +29,5 @@ public interface StudentService {
     List<Student> searchByKeyword(String keyword);                                   // TODO 13
     List<Student> findAboveAverageGpa();                                             // TODO 15
     List<Student> findTopNInDepartment(String deptCode, int n);                      // TODO 17
+    List<StudentSummary> getActiveSummaries();                                       // TODO 18
 }

@@ -50,6 +50,7 @@ public class ExerciseRunner implements CommandLineRunner {
         todo15();
         todo16();
         todo17();
+        todo18();
     }
     private void bonus() {}
     private void partE() {}
@@ -150,6 +151,12 @@ public class ExerciseRunner implements CommandLineRunner {
     private void todo17() {
         title("TODO 17: Native SQL TOP (:n)");
         printList("Top 2 students of SE (native SQL)", studentService.findTopNInDepartment("SE", 2));
+    }
+
+    private void todo18() {
+        title("TODO 18: Interface projection");
+        System.out.println("-- Active student summaries:");
+        studentService.getActiveSummaries().forEach(s -> System.out.println("   " + s.toDisplayString()));
     }
 
     // ===== helpers =====

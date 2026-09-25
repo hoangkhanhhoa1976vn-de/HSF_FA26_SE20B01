@@ -1,5 +1,6 @@
 package com.hsf302.ch4.service;
 
+import com.hsf302.ch4.dto.StudentSummary;
 import com.hsf302.ch4.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -137,5 +138,10 @@ public class StudentServiceImpl implements StudentService {
             throw new IllegalArgumentException("n phải > 0");
         }
         return studentRepository.findTopNByDepartmentNative(deptCode, n);
+    }
+
+    @Override
+    public List<StudentSummary> getActiveSummaries() {
+        return studentRepository.findActiveSummaries();
     }
 }
