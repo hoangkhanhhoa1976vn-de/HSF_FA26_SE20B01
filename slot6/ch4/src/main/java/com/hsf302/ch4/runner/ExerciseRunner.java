@@ -51,6 +51,7 @@ public class ExerciseRunner implements CommandLineRunner {
         todo16();
         todo17();
         todo18();
+        todo19();
     }
     private void bonus() {}
     private void partE() {}
@@ -157,6 +158,16 @@ public class ExerciseRunner implements CommandLineRunner {
         title("TODO 18: Interface projection");
         System.out.println("-- Active student summaries:");
         studentService.getActiveSummaries().forEach(s -> System.out.println("   " + s.toDisplayString()));
+    }
+
+    private void todo19() {
+        title("TODO 19: @Query + Pageable");
+        for (int p = 0; p < 2; p++) {
+            Page<Student> page = studentService.findActiveByDepartment("SE", p, 2);
+            printList("Active SE students - Page " + p, page.getContent());
+            System.out.printf("   [totalElements=%d, totalPages=%d, hasNext=%b]\n",
+                    page.getTotalElements(), page.getTotalPages(), page.hasNext());
+        }
     }
 
     // ===== helpers =====
