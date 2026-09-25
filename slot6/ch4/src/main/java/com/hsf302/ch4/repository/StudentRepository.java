@@ -3,6 +3,8 @@ package com.hsf302.ch4.repository;
 import com.hsf302.ch4.pojo.Student;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import com.hsf302.ch4.pojo.Gender;
 import java.time.LocalDate;
@@ -26,4 +28,8 @@ public interface StudentRepository extends JpaRepository<Student, Long>,
     List<Student> findByDepartment_CodeOrderByFullNameAsc(String code);         // TODO 11
     long countByDepartment_Code(String code);                                   // TODO 11, 22
     List<Student> findTop3ByOrderByGpaDesc();                                   // TODO 11
+
+    // ===== Part D - Custom query with @Query =====
+    @Query("SELECT s FROM Student s WHERE s.department.code = :code AND s.gpa >= :minGpa ORDER BY s.gpa DESC")
+    List<Student> findGoodStudentsInDepartment(@Param("code") String code, @Param("minGpa") double minGpa); // TODO 12
 }

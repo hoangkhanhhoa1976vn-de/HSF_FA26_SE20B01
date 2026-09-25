@@ -41,7 +41,9 @@ public class ExerciseRunner implements CommandLineRunner {
         todo10();
         todo11();
     }
-    private void partD() {}
+    private void partD() {
+        todo12();
+    }
     private void bonus() {}
     private void partE() {}
 
@@ -93,6 +95,11 @@ public class ExerciseRunner implements CommandLineRunner {
         System.out.println("AI student count: " + studentService.countByDepartment("AI"));
         printList("Top 3 students by GPA", studentService.findTop3ByGpa());
         printList("Departments without students", departmentService.findDepartmentsWithoutStudents());
+    }
+
+    private void todo12() {
+        title("TODO 12: JPQL named parameter");
+        printList("Good students in SE (GPA >= 3.0)", studentService.findGoodStudents("SE", 3.0));
     }
 
     // ===== helpers =====
