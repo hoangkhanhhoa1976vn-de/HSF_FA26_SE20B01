@@ -39,6 +39,7 @@ public class ExerciseRunner implements CommandLineRunner {
         todo8();
         todo9();
         todo10();
+        todo11();
     }
     private void partD() {}
     private void bonus() {}
@@ -84,6 +85,14 @@ public class ExerciseRunner implements CommandLineRunner {
         printList("GPA in [3.0, 3.6] (sorted desc)", studentService.findByGpaRange(3.0, 3.6));
         printList("Active male students", studentService.findActiveByGender(Gender.MALE));
         printList("Born after 2005-01-01", studentService.findBornAfter(LocalDate.of(2005, 1, 1)));
+    }
+
+    private void todo11() {
+        title("TODO 11: nested property, Top3, IsEmpty");
+        printList("Students in SE dept (sorted by name)", studentService.findByDepartment("SE"));
+        System.out.println("AI student count: " + studentService.countByDepartment("AI"));
+        printList("Top 3 students by GPA", studentService.findTop3ByGpa());
+        printList("Departments without students", departmentService.findDepartmentsWithoutStudents());
     }
 
     // ===== helpers =====
