@@ -49,6 +49,7 @@ public class ExerciseRunner implements CommandLineRunner {
         todo14();
         todo15();
         todo16();
+        todo17();
     }
     private void bonus() {}
     private void partE() {}
@@ -144,6 +145,11 @@ public class ExerciseRunner implements CommandLineRunner {
         Department d = departmentService.getWithStudents("AI");
         System.out.println("   Department: " + d);
         printList("Students của " + d.getCode(), d.getStudents());
+    }
+
+    private void todo17() {
+        title("TODO 17: Native SQL TOP (:n)");
+        printList("Top 2 students of SE (native SQL)", studentService.findTopNInDepartment("SE", 2));
     }
 
     // ===== helpers =====
