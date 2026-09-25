@@ -69,4 +69,6 @@ public interface StudentRepository extends JpaRepository<Student, Long>,
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query("UPDATE Student s SET s.department = :to WHERE s.department = :from")
     int transferStudents(@Param("from") Department from, @Param("to") Department to); // TODO 22
+
+    long deleteByActiveFalse();                                                 // TODO 23
 }
