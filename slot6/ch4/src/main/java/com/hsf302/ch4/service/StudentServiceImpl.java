@@ -12,6 +12,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import com.hsf302.ch4.specification.StudentSpecs;
+import org.springframework.data.jpa.domain.Specification;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -149,5 +151,14 @@ public class StudentServiceImpl implements StudentService {
     public Page<Student> findActiveByDepartment(String deptCode, int pageIndex, int size) {
         Pageable pageable = PageRequest.of(pageIndex, size, Sort.by("gpa").descending());
         return studentRepository.findActiveByDepartment(deptCode, pageable);
+    }
+
+    @Override
+    public List<Student> search(String kw, String deptCode, Double minGpa, Boolean active) {
+        Specification<Student> spec = Specification.where(StudentSpecs.nameContains(kw))
+                .and(StudentSpecs.inDepartment(deptCode))
+                .and(StudentSpecs.gpaAtLeast(minGpa))
+                .and(StudentSpecs.isActive(active));
+        return studentRepository.findAll(spec, Sort.by("fullName"));
     }
 }
