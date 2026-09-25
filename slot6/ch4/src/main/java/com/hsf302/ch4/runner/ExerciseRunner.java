@@ -1,5 +1,6 @@
 package com.hsf302.ch4.runner;
 
+import com.hsf302.ch4.pojo.Department;
 import com.hsf302.ch4.pojo.Gender;
 import com.hsf302.ch4.pojo.Student;
 import com.hsf302.ch4.service.DepartmentService;
@@ -7,6 +8,7 @@ import com.hsf302.ch4.service.StudentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
+import org.hibernate.LazyInitializationException;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
@@ -46,6 +48,7 @@ public class ExerciseRunner implements CommandLineRunner {
         todo13();
         todo14();
         todo15();
+        todo16();
     }
     private void bonus() {}
     private void partE() {}
@@ -119,6 +122,28 @@ public class ExerciseRunner implements CommandLineRunner {
     private void todo15() {
         title("TODO 15: Subquery AVG");
         printList("Students with GPA > overall average", studentService.findAboveAverageGpa());
+    }
+
+    private void todo16() {
+        title("TODO 16: LazyInitializationException & JOIN FETCH");
+
+        // 16a: Tái hiện & bắt LazyInitializationException
+        System.out.println("-- 16a. Truy cập students ngoài transaction:");
+        try {
+            Department d = departmentService.findByCode("AI").orElseThrow();
+            System.out.println("   Department: " + d);
+            int size = d.getStudents().size(); // ngoài session -> ném exception
+            System.out.println("   Students size: " + size);
+        } catch (LazyInitializationException e) {
+            System.out.println("   [BẮT ĐƯỢC EXCEPTION MONG ĐỢI]: " + e.getClass().getSimpleName()
+                    + " - " + e.getMessage());
+        }
+
+        // 16b: Sửa bằng JOIN FETCH
+        System.out.println("-- 16b. Sửa bằng JOIN FETCH (1 câu SQL):");
+        Department d = departmentService.getWithStudents("AI");
+        System.out.println("   Department: " + d);
+        printList("Students của " + d.getCode(), d.getStudents());
     }
 
     // ===== helpers =====
