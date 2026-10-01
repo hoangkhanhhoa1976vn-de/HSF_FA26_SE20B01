@@ -6,6 +6,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "students")
@@ -41,76 +44,36 @@ public class Student {
     @JoinColumn(name = "department_id", nullable = false)
     private Department department;
 
-    public Long getId() {
-        return id;
+    // Owning side: Student quản lý bảng trung gian student_courses
+    @ManyToMany
+    @JoinTable(
+        name = "student_courses",
+        joinColumns = @JoinColumn(name = "student_id"),
+        inverseJoinColumns = @JoinColumn(name = "course_id")
+    )
+    private Set<Course> courses = new HashSet<>();
+
+    // ===== Helper đồng bộ 2 chiều =====
+    public void enroll(Course c) {
+        courses.add(c);
+        c.getStudents().add(this);
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void unenroll(Course c) {
+        courses.remove(c);
+        c.getStudents().remove(this);
     }
 
-    public String getStudentCode() {
-        return studentCode;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Student other)) return false;
+        return studentCode != null && studentCode.equals(other.getStudentCode());
     }
 
-    public void setStudentCode(String studentCode) {
-        this.studentCode = studentCode;
-    }
-
-    public String getFullName() {
-        return fullName;
-    }
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public Gender getGender() {
-        return gender;
-    }
-
-    public void setGender(Gender gender) {
-        this.gender = gender;
-    }
-
-    public LocalDate getDob() {
-        return dob;
-    }
-
-    public void setDob(LocalDate dob) {
-        this.dob = dob;
-    }
-
-    public Double getGpa() {
-        return gpa;
-    }
-
-    public void setGpa(Double gpa) {
-        this.gpa = gpa;
-    }
-
-    public boolean isActive() {
-        return active;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
-    }
-
-    public Department getDepartment() {
-        return department;
-    }
-
-    public void setDepartment(Department department) {
-        this.department = department;
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(studentCode);
     }
 
     @Override
