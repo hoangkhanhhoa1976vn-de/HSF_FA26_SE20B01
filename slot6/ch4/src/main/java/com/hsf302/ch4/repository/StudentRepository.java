@@ -71,10 +71,14 @@ public interface StudentRepository extends JpaRepository<Student, Long>,
 
     long deleteByActiveFalse();
 
-    // ===== Exercise 2 â€” Part C =====
+    // ===== Exercise 2 Ã¢â‚¬â€ Part C =====
     List<Student> findByCourses_CodeOrderByFullNameAsc(String courseCode);
     long countByCourses_Code(String courseCode);
     List<Student> findByCourses_CodeAndActiveTrueOrderByFullNameAsc(String courseCode);
     List<Student> findByCoursesIsEmptyOrderByFullNameAsc();
     boolean existsByStudentCodeAndCourses_Code(String studentCode, String courseCode);
+
+    // ===== Exercise 2 — Part D =====
+    @Query("SELECT s FROM Student s JOIN s.courses c WHERE c.code = :code AND s.gpa >= :minGpa ORDER BY s.gpa DESC")
+    List<Student> findGoodStudentsInCourse(@Param("code") String courseCode, @Param("minGpa") double minGpa);
 }
