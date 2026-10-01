@@ -1,5 +1,6 @@
 package com.hsf302.ch4.service;
 
+import com.hsf302.ch4.dto.CourseEnrollmentCount;
 import com.hsf302.ch4.dto.CourseStatDTO;
 import com.hsf302.ch4.pojo.Course;
 import com.hsf302.ch4.repository.CourseRepository;
@@ -79,5 +80,13 @@ public class CourseServiceImpl implements CourseService {
     public Course getWithStudents(String code) {
         return courseRepository.findWithStudentsByCode(code)
                 .orElseThrow(() -> new IllegalArgumentException("Course not found: " + code));
+    }
+
+    @Override
+    public List<CourseEnrollmentCount> findTopEnrolled(int n) {
+        if (n <= 0) {
+            throw new IllegalArgumentException("n must be > 0");
+        }
+        return courseRepository.findTopEnrolledNative(n);
     }
 }
