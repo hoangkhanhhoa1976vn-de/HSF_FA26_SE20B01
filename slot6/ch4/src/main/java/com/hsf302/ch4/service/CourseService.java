@@ -18,4 +18,5 @@ public interface CourseService {
     List<Course> findCoursesOfDepartment(String deptCode, boolean distinct);
     List<Course> findCoursesWithoutStudents();
     List<CourseStatDTO> getStatistics();
+    List<Course> findFullCourses();
 }

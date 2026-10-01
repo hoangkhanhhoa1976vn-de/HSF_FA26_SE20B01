@@ -72,14 +72,14 @@ public interface StudentRepository extends JpaRepository<Student, Long>,
 
     long deleteByActiveFalse();
 
-    // ===== Exercise 2 ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â Part C =====
+    // ===== Exercise 2 ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â Part C =====
     List<Student> findByCourses_CodeOrderByFullNameAsc(String courseCode);
     long countByCourses_Code(String courseCode);
     List<Student> findByCourses_CodeAndActiveTrueOrderByFullNameAsc(String courseCode);
     List<Student> findByCoursesIsEmptyOrderByFullNameAsc();
     boolean existsByStudentCodeAndCourses_Code(String studentCode, String courseCode);
 
-    // ===== Exercise 2 â€” Part D =====
+    // ===== Exercise 2 Ã¢â‚¬â€ Part D =====
     @Query("SELECT s FROM Student s JOIN s.courses c WHERE c.code = :code AND s.gpa >= :minGpa ORDER BY s.gpa DESC")
     List<Student> findGoodStudentsInCourse(@Param("code") String courseCode, @Param("minGpa") double minGpa);
 
@@ -89,4 +89,7 @@ public interface StudentRepository extends JpaRepository<Student, Long>,
            "HAVING SUM(c.credits) >= :minCredits " +
            "ORDER BY SUM(c.credits) DESC, s.fullName")
     List<StudentCreditDTO> getCreditSummary(@Param("minCredits") long minCredits);
+
+    @Query("SELECT s FROM Student s WHERE SIZE(s.courses) > :n ORDER BY s.fullName")
+    List<Student> findStudentsWithMoreThanNCourses(@Param("n") int n);
 }
