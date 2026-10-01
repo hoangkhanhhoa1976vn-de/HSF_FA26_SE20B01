@@ -3,6 +3,10 @@ package com.hsf302.ch4.service;
 import com.hsf302.ch4.dto.EnrollmentView;
 import com.hsf302.ch4.dto.StudentCreditDTO;
 import com.hsf302.ch4.pojo.Course;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import com.hsf302.ch4.pojo.Student;
 import com.hsf302.ch4.repository.CourseRepository;
 import com.hsf302.ch4.repository.StudentRepository;
@@ -111,5 +115,14 @@ public class EnrollmentServiceImpl implements EnrollmentService {
     @Override
     public List<EnrollmentView> getEnrollmentsOfDepartment(String deptCode) {
         return studentRepository.findEnrollmentsOfDepartment(deptCode);
+    }
+
+    @Override
+    public Page<Student> findStudentsInCoursePage(String courseCode, int pageIndex, int size) {
+        if (pageIndex < 0 || size <= 0) {
+            throw new IllegalArgumentException("pageIndex must be >= 0 and size must be > 0");
+        }
+        Pageable pageable = PageRequest.of(pageIndex, size, Sort.by("fullName"));
+        return studentRepository.findPageByCourseCode(courseCode, pageable);
     }
 }

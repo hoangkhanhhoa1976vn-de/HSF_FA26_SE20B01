@@ -1,6 +1,7 @@
 package com.hsf302.ch4.runner;
 
 import com.hsf302.ch4.pojo.Course;
+import org.springframework.data.domain.Page;
 import com.hsf302.ch4.pojo.Student;
 import org.hibernate.LazyInitializationException;
 import com.hsf302.ch4.service.CourseService;
@@ -53,6 +54,7 @@ public class Exercise2Runner implements CommandLineRunner {
         todo16();
         todo17();
         todo18();
+        todo19();
     }
     private void bonus() { }
     private void partE() { }
@@ -189,5 +191,18 @@ public class Exercise2Runner implements CommandLineRunner {
         enrollmentService.getEnrollmentsOfDepartment("AI").forEach(v -> System.out.printf(
                 "   %s | %-14s | %s | %-35s | %d%n",
                 v.getStudentCode(), v.getFullName(), v.getCourseCode(), v.getCourseName(), v.getCredits()));
+    }
+
+    private void todo19() {
+        title("TODO 19: paginate students of HSF302 (size 2, order by fullName)");
+        int pageIndex = 0;
+        Page<Student> page;
+        do {
+            page = enrollmentService.findStudentsInCoursePage("HSF302", pageIndex, 2);
+            printList("Page " + pageIndex, page.getContent());
+            pageIndex++;
+        } while (page.hasNext());
+        System.out.println("totalElements = " + page.getTotalElements()
+                + ", totalPages = " + page.getTotalPages());
     }
 }
