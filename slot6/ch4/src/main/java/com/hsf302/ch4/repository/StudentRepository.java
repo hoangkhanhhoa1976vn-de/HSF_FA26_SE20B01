@@ -1,5 +1,6 @@
 package com.hsf302.ch4.repository;
 
+import com.hsf302.ch4.dto.StudentCreditDTO;
 import com.hsf302.ch4.dto.StudentSummary;
 import com.hsf302.ch4.pojo.Department;
 import com.hsf302.ch4.pojo.Gender;
@@ -71,14 +72,21 @@ public interface StudentRepository extends JpaRepository<Student, Long>,
 
     long deleteByActiveFalse();
 
-    // ===== Exercise 2 Ã¢â‚¬â€ Part C =====
+    // ===== Exercise 2 ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â Part C =====
     List<Student> findByCourses_CodeOrderByFullNameAsc(String courseCode);
     long countByCourses_Code(String courseCode);
     List<Student> findByCourses_CodeAndActiveTrueOrderByFullNameAsc(String courseCode);
     List<Student> findByCoursesIsEmptyOrderByFullNameAsc();
     boolean existsByStudentCodeAndCourses_Code(String studentCode, String courseCode);
 
-    // ===== Exercise 2 — Part D =====
+    // ===== Exercise 2 â€” Part D =====
     @Query("SELECT s FROM Student s JOIN s.courses c WHERE c.code = :code AND s.gpa >= :minGpa ORDER BY s.gpa DESC")
     List<Student> findGoodStudentsInCourse(@Param("code") String courseCode, @Param("minGpa") double minGpa);
+
+    @Query("SELECT new com.hsf302.ch4.dto.StudentCreditDTO(s.studentCode, s.fullName, COUNT(c), SUM(c.credits)) " +
+           "FROM Student s JOIN s.courses c " +
+           "GROUP BY s.studentCode, s.fullName " +
+           "HAVING SUM(c.credits) >= :minCredits " +
+           "ORDER BY SUM(c.credits) DESC, s.fullName")
+    List<StudentCreditDTO> getCreditSummary(@Param("minCredits") long minCredits);
 }

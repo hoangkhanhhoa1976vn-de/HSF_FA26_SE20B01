@@ -46,6 +46,7 @@ public class Exercise2Runner implements CommandLineRunner {
     private void partD() {
         todo12();
         todo13();
+        todo14();
     }
     private void bonus() { }
     private void partE() { }
@@ -132,5 +133,12 @@ public class Exercise2Runner implements CommandLineRunner {
                 "   %-6s | %-40s | %d/%d (free %d) | avg GPA %s%n",
                 d.code(), d.name(), d.enrolled(), d.capacity(), d.remaining(),
                 d.avgGpa() == null ? "null" : String.format("%.3f", d.avgGpa())));
+    }
+
+    private void todo14() {
+        title("TODO 14: total credits per student (GROUP BY + HAVING)");
+        enrollmentService.getCreditSummary(7).forEach(d -> System.out.printf(
+                "   %s | %-15s | %d course(s) | %d credits%n",
+                d.studentCode(), d.fullName(), d.courseCount(), d.totalCredits()));
     }
 }
