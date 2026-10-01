@@ -1,5 +1,6 @@
 package com.hsf302.ch4.repository;
 
+import com.hsf302.ch4.dto.EnrollmentView;
 import com.hsf302.ch4.dto.StudentCreditDTO;
 import com.hsf302.ch4.dto.StudentSummary;
 import com.hsf302.ch4.pojo.Department;
@@ -72,14 +73,14 @@ public interface StudentRepository extends JpaRepository<Student, Long>,
 
     long deleteByActiveFalse();
 
-    // ===== Exercise 2 ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â Part C =====
+    // ===== Exercise 2 ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â Part C =====
     List<Student> findByCourses_CodeOrderByFullNameAsc(String courseCode);
     long countByCourses_Code(String courseCode);
     List<Student> findByCourses_CodeAndActiveTrueOrderByFullNameAsc(String courseCode);
     List<Student> findByCoursesIsEmptyOrderByFullNameAsc();
     boolean existsByStudentCodeAndCourses_Code(String studentCode, String courseCode);
 
-    // ===== Exercise 2 ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â Part D =====
+    // ===== Exercise 2 ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â Part D =====
     @Query("SELECT s FROM Student s JOIN s.courses c WHERE c.code = :code AND s.gpa >= :minGpa ORDER BY s.gpa DESC")
     List<Student> findGoodStudentsInCourse(@Param("code") String courseCode, @Param("minGpa") double minGpa);
 
@@ -95,4 +96,11 @@ public interface StudentRepository extends JpaRepository<Student, Long>,
 
     @Query("SELECT s FROM Student s LEFT JOIN FETCH s.courses WHERE s.studentCode = :code")
     Optional<Student> findByStudentCodeWithCourses(@Param("code") String studentCode);
+
+    @Query("SELECT s.studentCode AS studentCode, s.fullName AS fullName, " +
+           "       c.code AS courseCode, c.name AS courseName, c.credits AS credits " +
+           "FROM Student s JOIN s.department d JOIN s.courses c " +
+           "WHERE d.code = :deptCode " +
+           "ORDER BY s.studentCode, c.code")
+    List<EnrollmentView> findEnrollmentsOfDepartment(@Param("deptCode") String deptCode);
 }
