@@ -1,4 +1,4 @@
-﻿target/
+target/
 *.class
 .idea/
 *.iml
@@ -7,3 +7,6 @@
 out/
 .DS_Store
 *.log
+
+.vscode/
+*.zip
