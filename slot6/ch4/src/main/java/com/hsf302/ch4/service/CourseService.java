@@ -19,4 +19,5 @@ public interface CourseService {
     List<Course> findCoursesWithoutStudents();
     List<CourseStatDTO> getStatistics();
     List<Course> findFullCourses();
+    Course getWithStudents(String code);
 }
