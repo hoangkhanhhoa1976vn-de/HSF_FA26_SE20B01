@@ -25,4 +25,5 @@ public interface EnrollmentService {
     Page<Student> findStudentsInCoursePage(String courseCode, int pageIndex, int size);
     void enroll(String studentCode, String courseCode);
     void unenroll(String studentCode, String courseCode);
+    void switchCourse(String studentCode, String fromCode, String toCode);
 }
