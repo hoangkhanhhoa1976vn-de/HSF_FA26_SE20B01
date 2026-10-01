@@ -46,4 +46,16 @@ public class CourseServiceImpl implements CourseService {
     public long countBySemester(String semester) {
         return courseRepository.countBySemester(semester);
     }
+
+    @Override
+    public List<Course> findCoursesOfStudent(String studentCode) {
+        return courseRepository.findByStudents_StudentCodeOrderByCodeAsc(studentCode);
+    }
+
+    @Override
+    public List<Course> findCoursesOfDepartment(String deptCode, boolean distinct) {
+        return distinct
+                ? courseRepository.findDistinctByStudents_Department_CodeOrderByCodeAsc(deptCode)
+                : courseRepository.findByStudents_Department_CodeOrderByCodeAsc(deptCode);
+    }
 }

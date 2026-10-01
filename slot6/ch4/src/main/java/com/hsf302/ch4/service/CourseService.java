@@ -12,4 +12,7 @@ public interface CourseService {
     Optional<Course> findByCode(String code);
     List<Course> findBySemester(String semester);
     long countBySemester(String semester);
+
+    List<Course> findCoursesOfStudent(String studentCode);
+    List<Course> findCoursesOfDepartment(String deptCode, boolean distinct);
 }
