@@ -5,7 +5,6 @@ import com.hsf302.ch4.pojo.Gender;
 import com.hsf302.ch4.pojo.Student;
 import com.hsf302.ch4.repository.DepartmentRepository;
 import com.hsf302.ch4.repository.StudentRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -18,11 +17,15 @@ import static com.hsf302.ch4.pojo.Gender.MALE;
 
 @Component
 @Order(1)
-@RequiredArgsConstructor
 public class DataInitializer implements CommandLineRunner {
 
     private final DepartmentRepository departmentRepository;
     private final StudentRepository studentRepository;
+
+    public DataInitializer(DepartmentRepository departmentRepository, StudentRepository studentRepository) {
+        this.departmentRepository = departmentRepository;
+        this.studentRepository = studentRepository;
+    }
 
     @Override
     public void run(String... args) {

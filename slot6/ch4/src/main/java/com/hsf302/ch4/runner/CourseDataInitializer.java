@@ -4,8 +4,8 @@ import com.hsf302.ch4.pojo.Course;
 import com.hsf302.ch4.pojo.Student;
 import com.hsf302.ch4.repository.CourseRepository;
 import com.hsf302.ch4.repository.StudentRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,11 +14,16 @@ import java.util.List;
 
 @Component
 @Order(2)
-@RequiredArgsConstructor
+@Profile("ex2")
 public class CourseDataInitializer implements CommandLineRunner {
 
     private final CourseRepository courseRepository;
     private final StudentRepository studentRepository;
+
+    public CourseDataInitializer(CourseRepository courseRepository, StudentRepository studentRepository) {
+        this.courseRepository = courseRepository;
+        this.studentRepository = studentRepository;
+    }
 
     @Override
     @Transactional

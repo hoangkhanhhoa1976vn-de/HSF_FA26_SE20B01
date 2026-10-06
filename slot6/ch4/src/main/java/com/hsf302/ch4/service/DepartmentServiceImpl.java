@@ -2,7 +2,6 @@ package com.hsf302.ch4.service;
 
 import com.hsf302.ch4.repository.DepartmentRepository;
 import com.hsf302.ch4.repository.StudentRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,12 +12,16 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class DepartmentServiceImpl implements DepartmentService {
 
     private final DepartmentRepository departmentRepository;
     private final StudentRepository studentRepository;
+
+    public DepartmentServiceImpl(DepartmentRepository departmentRepository, StudentRepository studentRepository) {
+        this.departmentRepository = departmentRepository;
+        this.studentRepository = studentRepository;
+    }
 
     @Override
     public long count() {

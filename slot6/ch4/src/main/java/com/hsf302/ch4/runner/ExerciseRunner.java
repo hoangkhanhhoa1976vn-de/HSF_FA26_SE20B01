@@ -5,7 +5,6 @@ import com.hsf302.ch4.pojo.Gender;
 import com.hsf302.ch4.pojo.Student;
 import com.hsf302.ch4.service.DepartmentService;
 import com.hsf302.ch4.service.StudentService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.hibernate.LazyInitializationException;
@@ -19,11 +18,15 @@ import java.util.Collection;
 @Component
 @Order(2)
 @Profile("ex1")
-@RequiredArgsConstructor
 public class ExerciseRunner implements CommandLineRunner {
 
     private final DepartmentService departmentService;
     private final StudentService studentService;
+
+    public ExerciseRunner(DepartmentService departmentService, StudentService studentService) {
+        this.departmentService = departmentService;
+        this.studentService = studentService;
+    }
 
     @Override
     public void run(String... args) {
