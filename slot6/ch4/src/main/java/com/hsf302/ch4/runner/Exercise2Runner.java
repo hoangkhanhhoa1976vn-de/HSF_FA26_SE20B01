@@ -61,7 +61,9 @@ public class Exercise2Runner implements CommandLineRunner {
         todo18();
         todo19();
     }
-    private void bonus() { }
+    private void bonus() {
+        todo25();
+    }
     private void partE() {
         todo20();
         todo21();
@@ -271,6 +273,13 @@ public class Exercise2Runner implements CommandLineRunner {
         System.out.println("Deleted rows: " + enrollmentService.removeEnrollmentsOfInactiveStudents());
         printCourseStats();
         printList("Students without courses", enrollmentService.findStudentsWithoutCourses());
+    }
+
+    private void todo25() {
+        title("TODO 25 (Bonus): Specification search");
+        printList("search(null, SU26, null, null)", enrollmentService.search(null, "SU26", null, null));
+        printList("search(HSF302, null, SE, 3.5)", enrollmentService.search("HSF302", null, "SE", 3.5));
+        printList("search(null, FA26, AI, null)", enrollmentService.search(null, "FA26", "AI", null));
     }
 
     private void testTeacherQuestions() {

@@ -187,4 +187,13 @@ public class EnrollmentServiceImpl implements EnrollmentService {
     public int removeEnrollmentsOfInactiveStudents() {
         return studentRepository.deleteEnrollmentsOfInactiveStudents();
     }
+
+    @Override
+    public List<Student> search(String courseCode, String semester, String deptCode, Double minGpa) {
+        Specification<Student> spec = Specification.where(EnrollmentSpecs.enrolledIn(courseCode))
+                .and(EnrollmentSpecs.inSemester(semester))
+                .and(EnrollmentSpecs.inDepartment(deptCode))
+                .and(EnrollmentSpecs.gpaAtLeast(minGpa));
+        return studentRepository.findAll(spec, Sort.by("fullName"));
+    }
 }
