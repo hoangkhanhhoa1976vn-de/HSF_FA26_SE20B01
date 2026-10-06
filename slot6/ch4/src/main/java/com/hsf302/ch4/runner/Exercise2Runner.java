@@ -7,10 +7,10 @@ import org.hibernate.LazyInitializationException;
 import com.hsf302.ch4.service.CourseService;
 import com.hsf302.ch4.service.EnrollmentService;
 import com.hsf302.ch4.service.StudentService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.annotation.Order;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
@@ -20,12 +20,17 @@ import java.util.List;
 @Component
 @Order(3)
 @Profile("ex2")
-@RequiredArgsConstructor
 public class Exercise2Runner implements CommandLineRunner {
 
     private final CourseService courseService;
     private final EnrollmentService enrollmentService;
     private final StudentService studentService;
+
+    public Exercise2Runner(CourseService courseService, EnrollmentService enrollmentService, StudentService studentService) {
+        this.courseService = courseService;
+        this.enrollmentService = enrollmentService;
+        this.studentService = studentService;
+    }
 
     @Override
     public void run(String... args) {
@@ -61,6 +66,8 @@ public class Exercise2Runner implements CommandLineRunner {
         todo20();
         todo21();
         todo22();
+        todo23();
+        testTeacherQuestions();
     }
 
     private void title(String t) {
@@ -241,5 +248,47 @@ public class Exercise2Runner implements CommandLineRunner {
         attempt("switch SE001 PRJ301 -> AIL303",
                 () -> enrollmentService.switchCourse("SE001", "PRJ301", "AIL303"));
         printList("Courses of SE001 (after rollback)", enrollmentService.getCoursesOfStudent("SE001"));
+    }
+
+    private void todo23() {
+        title("TODO 23: delete course");
+        try {
+            courseService.deleteCourseDirectly("IAA202");
+            System.out.println("(a) Deleted ?!");
+        } catch (DataIntegrityViolationException e) {
+            System.out.println("(a) Caught: " + e.getClass().getSimpleName());
+            System.out.println("    " + e.getMostSpecificCause().getMessage());
+        }
+
+        System.out.println("(b) Unlinked students: " + courseService.deleteCourse("IAA202"));
+        printList("Remaining courses", courseService.findAllOrderByCode());
+        printList("Courses of IA002", enrollmentService.getCoursesOfStudent("IA002"));
+    }
+
+    private void testTeacherQuestions() {
+        title("KIỂM TRA CÔ BÍCH TRA");
+        System.out.println("-- Câu 1a (Derived method: credits [2, 3]):");
+        courseService.findByCreditsRange(2, 3, false).forEach(c -> System.out.println("   " + c));
+
+        System.out.println("-- Câu 1b (Custom query JPQL: credits [2, 3]):");
+        courseService.findByCreditsRange(2, 3, true).forEach(c -> System.out.println("   " + c));
+
+        System.out.println("-- Câu 2a (Derived method: đếm credits > 3): "
+                + courseService.countCoursesWithCreditsGreaterThan(3, false));
+        System.out.println("-- Câu 2b (Custom query JPQL: đếm credits > 3): "
+                + courseService.countCoursesWithCreditsGreaterThan(3, true));
+
+        System.out.println("-- Câu 3 (Custom query JPQL: tìm khóa có tên chứa 'ing' không phân biệt hoa thường):");
+        courseService.searchByName("ing").forEach(c -> System.out.println("   " + c));
+
+        System.out.println("-- Câu 4 (Thống kê theo học kỳ: số khóa, số lượt đăng ký):");
+        courseService.getSemesterStats().forEach(s -> System.out.printf(
+                "   Học kỳ: %-5s | Số khóa: %d | Số lượt ĐK: %d%n",
+                s.semester(), s.courseCount(), s.totalEnrollments()));
+
+        System.out.println("-- Câu 5 (Native Query: tổng tín chỉ đã đăng ký theo khoa, giảm dần):");
+        courseService.getDepartmentCreditsNative().forEach(d -> System.out.printf(
+                "   Khoa: %-4s (%-25s) | Tổng tín chỉ: %d%n",
+                d.getDepartmentCode(), d.getDepartmentName(), d.getTotalCredits()));
     }
 }
