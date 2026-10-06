@@ -10,20 +10,25 @@ import org.springframework.data.domain.Sort;
 import com.hsf302.ch4.pojo.Student;
 import com.hsf302.ch4.repository.CourseRepository;
 import com.hsf302.ch4.repository.StudentRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.hsf302.ch4.specification.EnrollmentSpecs;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.util.Comparator;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class EnrollmentServiceImpl implements EnrollmentService {
 
     private final StudentRepository studentRepository;
     private final CourseRepository courseRepository;
+
+    public EnrollmentServiceImpl(StudentRepository studentRepository, CourseRepository courseRepository) {
+        this.studentRepository = studentRepository;
+        this.courseRepository = courseRepository;
+    }
 
     @Override
     public List<Course> getCoursesOfStudent(String studentCode) {
@@ -175,5 +180,11 @@ public class EnrollmentServiceImpl implements EnrollmentService {
         }
         s.unenroll(from);
         checkAndEnroll(s, to);
+    }
+
+    @Override
+    @Transactional
+    public int removeEnrollmentsOfInactiveStudents() {
+        return studentRepository.deleteEnrollmentsOfInactiveStudents();
     }
 }
