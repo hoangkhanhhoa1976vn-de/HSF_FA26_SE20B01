@@ -24,7 +24,7 @@ public class StudentController {
         this.studentService = studentService;
     }
 
-    /** Chạy trước MỌI handler trong controller → view nào cũng có ${majors} */
+
     @ModelAttribute("majors")
     public List<String> majors() {
         return studentService.getMajors();
