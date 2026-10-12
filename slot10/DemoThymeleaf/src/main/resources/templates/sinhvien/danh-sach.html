@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="~{fragments/layout :: commonHead(${tieuDe})}"></th:block>
+</head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar('sinhvien')}"></nav>
+
+<main class="container py-4">
+    <th:block th:replace="~{fragments/layout :: alerts}"></th:block>
+
+    <h1 class="h3 mb-3" th:text="${tieuDe}">Tiêu đề</h1>
+
+    <!-- Có dữ liệu → hiện bảng -->
+    <table class="table table-bordered table-hover bg-white shadow-sm"
+           th:unless="${#lists.isEmpty(sinhViens)}">
+        <thead class="table-dark">
+        <tr>
+            <th>#</th>
+            <th>Mã SV</th>
+            <th>Họ tên</th>
+            <th class="text-end">Điểm TB</th>
+            <th>Xếp loại</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="sv, stat : ${sinhViens}">
+            <td th:text="${stat.count}">1</td>
+            <td th:text="${sv.maSV}">SV001</td>
+            <td th:text="${sv.hoTen}">Nguyễn Văn An</td>
+            <td class="text-end" th:text="${#numbers.formatDecimal(sv.diemTB, 1, 1)}">8.5</td>
+            <td>
+                <span th:if="${sv.diemTB >= 8.0}" class="badge bg-success">Giỏi</span>
+                <span th:if="${sv.diemTB >= 6.5 and sv.diemTB < 8.0}" class="badge bg-primary">Khá</span>
+                <span th:if="${sv.diemTB < 6.5}" class="badge bg-danger">Trung bình</span>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <!-- Rỗng → hiện thông báo -->
+    <div th:if="${#lists.isEmpty(sinhViens)}" class="alert alert-info">
+        Không có sinh viên nào.
+    </div>
+
+    <p class="text-muted" th:unless="${#lists.isEmpty(sinhViens)}">
+        Tổng: <strong th:text="${#lists.size(sinhViens)}">0</strong> sinh viên
+    </p>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>
