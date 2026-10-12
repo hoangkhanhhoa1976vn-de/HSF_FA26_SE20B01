@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="~{fragments/layout :: commonHead('Kết quả')}"></th:block>
+</head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar('sanpham')}"></nav>
+
+<main class="container py-4">
+    <th:block th:replace="~{fragments/layout :: alerts}"></th:block>
+
+    <!-- Flash message: nếu không dùng successMsg thì fallback thongBao -->
+    <div th:if="${thongBao != null and successMsg == null}" class="alert alert-success" th:text="${thongBao}">Thông báo</div>
+
+    <h3 class="h5">Danh sách hiện tại</h3>
+
+    <ul class="list-group mb-3" th:unless="${#lists.isEmpty(danhSach)}">
+        <li class="list-group-item" th:each="sp : ${danhSach}">
+            <span th:text="|${sp.ten} - ${#numbers.formatDecimal(sp.gia, 1, 'POINT', 0, 'COMMA')} VNĐ (SL: ${sp.soLuong})|">
+                Tên - Giá (SL)
+            </span>
+        </li>
+    </ul>
+    <p th:if="${#lists.isEmpty(danhSach)}" class="text-muted">Chưa có sản phẩm.</p>
+
+    <a th:href="@{/sanpham/them}" class="btn btn-primary">Thêm tiếp</a>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>
