@@ -1,5 +1,7 @@
 package com.example.ui.controller;
 
+import com.example.data.exception.StudentNotFoundException;
+import com.example.data.exception.ValidationException;
 import com.example.data.pojo.Student;
 import com.example.data.service.StudentService;
 import javafx.collections.FXCollections;
@@ -9,6 +11,7 @@ import javafx.scene.control.*;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class StudentController {
@@ -41,7 +44,6 @@ public class StudentController {
             List<Student> list = studentService.findAll();
             data.setAll(list);
             statusLabel.setText("Loaded " + list.size() + " students");
-            messageLabel.setText("");
         } catch (Exception e) {
             showError("Cannot load data: " + e.getMessage());
             statusLabel.setText("Database error");
@@ -55,7 +57,6 @@ public class StudentController {
             List<Student> list = studentService.search(keyword);
             data.setAll(list);
             statusLabel.setText("Found " + list.size() + " students");
-            messageLabel.setText("");
         } catch (Exception e) {
             showError("Cannot search: " + e.getMessage());
             statusLabel.setText("Database error");
@@ -65,13 +66,97 @@ public class StudentController {
     @FXML
     private void handleRefresh() {
         searchField.clear();
+        messageLabel.setText("");
         loadData();
     }
 
-    @FXML private void handleAdd()     { }
-    @FXML private void handleUpdate()  { }
-    @FXML private void handleDelete()  { }
-    @FXML private void handleClear()   { }
+    @FXML
+    private void handleAdd() {
+        try {
+            Student s = readForm();
+            Student created = studentService.create(s);
+            showInfo("Added: " + created.getName());
+            handleClear();
+            loadData();
+        } catch (ValidationException | StudentNotFoundException e) {
+            showError(e.getMessage());
+        } catch (Exception e) {
+            showError("System error: " + e.getMessage());
+        }
+    }
+
+    @FXML
+    private void handleUpdate() {
+        Student selected = tableView.getSelectionModel().getSelectedItem();
+        if (selected == null) {
+            return;
+        }
+        try {
+            Student edit = readForm();
+            edit.setId(selected.getId());
+            Student updated = studentService.update(edit);
+            showInfo("Updated: " + updated.getName());
+            handleClear();
+            loadData();
+        } catch (ValidationException | StudentNotFoundException e) {
+            showError(e.getMessage());
+        } catch (Exception e) {
+            showError("System error: " + e.getMessage());
+        }
+    }
+
+    @FXML
+    private void handleDelete() {
+        Student selected = tableView.getSelectionModel().getSelectedItem();
+        if (selected == null) {
+            return;
+        }
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirm Delete");
+        alert.setHeaderText(null);
+        alert.setContentText("Delete student \"" + selected.getName() + "\"?");
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            try {
+                studentService.delete(selected.getId());
+                showInfo("Deleted: " + selected.getName());
+                handleClear();
+                loadData();
+            } catch (ValidationException | StudentNotFoundException e) {
+                showError(e.getMessage());
+            } catch (Exception e) {
+                showError("System error: " + e.getMessage());
+            }
+        }
+    }
+
+    @FXML
+    private void handleClear() {
+        idField.clear();
+        nameField.clear();
+        emailField.clear();
+        ageField.clear();
+        tableView.getSelectionModel().clearSelection();
+        nameField.requestFocus();
+    }
+
+    private Student readForm() {
+        String name = nameField.getText();
+        String email = emailField.getText();
+        String ageText = ageField.getText();
+
+        if (ageText == null || ageText.isBlank()) {
+            throw new ValidationException("Age is required");
+        }
+        int age;
+        try {
+            age = Integer.parseInt(ageText.trim());
+        } catch (NumberFormatException e) {
+            throw new ValidationException("Age must be a number");
+        }
+        return new Student(name, email, age);
+    }
 
     private void fillForm(Student s) {
         if (s != null) {
