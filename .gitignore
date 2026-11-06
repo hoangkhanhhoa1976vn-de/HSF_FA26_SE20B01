@@ -1,4 +1,4 @@
-﻿target/
+target/
 *.class
 .idea/
 *.iml
@@ -9,3 +9,6 @@ out/
 *.log
 
 .slot14_full_backup/
+
+~$*
+Slot17/
